@@ -49,3 +49,18 @@ def handle_video(message):
 
     bot.reply_to(message, "Recebi! Iniciando processamento...")
     # ... (o resto do seu código continua aqui)
+@bot.message_handler(content_types=['video', 'document', 'audio', 'voice'])
+def handle_video(message):
+    # --- FILTRO DE SEGURANÇA ---
+    # Pegar tamanho em bytes (25MB é um limite seguro para o Render gratuito)
+    file_size = 0
+    if message.video: file_size = message.video.file_size
+    elif message.document: file_size = message.document.file_size
+    
+    if file_size > 25 * 1024 * 1024:  # Se > 25MB
+        bot.reply_to(message, "⚠️ Arquivo muito grande! (Máx 25MB para processamento direto). \n\nDica: Encaminhe este vídeo para um bot de 'Converter para MP3' no Telegram, pegue o áudio gerado e encaminhe para mim!")
+        return
+    # ---------------------------
+
+    bot.reply_to(message, "Recebi! Iniciando processamento...")
+    # ... (o resto do seu código continua aqui)
